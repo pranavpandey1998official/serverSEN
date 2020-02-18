@@ -9,6 +9,15 @@ exports.findUser = async(email) => {
 	return result;
 }
 
+exports.findUserViaId = async(userId) => {
+	const query = {
+		text: 'SELECT * FROM users WHERE user_id=$1',
+		values: [userId],
+	}
+	const result =  await connection.query(query);
+	return result;
+}
+
 exports.createUser = async (email, password, firstName, lastName) => {
 	const query = {
 		text: 'INSERT into users(email,password,first_name,last_name) values($1,$2,$3,$4)',

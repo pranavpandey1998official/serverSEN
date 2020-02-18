@@ -46,6 +46,7 @@ const signIn = async(req, res) => {
             }
           })
         }
+        return res.status(400).json({ message: "Email and password combination is wrong", error: true });
       })
     }catch(e) {
       res.status(500).json({
@@ -61,7 +62,7 @@ const userVerification = async(req, res) => {
 
   try {
     await User.setEmailVerified(user_id);
-    return res.status(201).json({
+    return res.set('Location','/info/emailVerified' ).status(301).json({
       message: "user verified successfully"
     })
   } catch(e) {
@@ -149,7 +150,7 @@ const resetPassword = (req, res) => {
   const { user_id } = user;
   bcrypt.genSalt(saltRounds, function(err, salt) {
     bcrypt.hash(password, salt, (err, hash) => {
-      User.resetPassword(user_id,password).then(()  => {
+      User.resetPassword(user_id,hash).then(()  => {
         return res.status(201).json({
           message: 'Password Reset Successfully'
         })
@@ -162,10 +163,50 @@ const resetPassword = (req, res) => {
   });
 };
 
+const signInViaToken = async(req, res) => {
+  const { token } = req.body;
+  if(!token) {
+    return res.status(500).json({
+      error: true, 
+      message: "Token Not Provided"
+    })
+  }
+  const decyptToken = jwt.verify(token, process.env.SECRET_KEY);
+  try {
+    const { user_id } = decyptToken;
+    users = await User.findUserViaId(user_id);
+    const user=users.rows[0]
+    if(!user) {
+      return res.status(402).json({
+        error: true,
+        message: "email already exists"
+      })
+    }
+    const { email, first_name, last_name } = user;
+    return res.status(200).json({
+      message: "Successful Authentication",
+      token,
+      user: {
+        email,
+        first_name,
+        last_name
+      }
+    })
+
+  }catch(e) {
+    console.log(e)
+    return res.status(500).json({
+      error: true, 
+      message: "Database error. Failed to create a user"
+    })
+  }
+}
+
 const router = express.Router();
 
 router.get("/:token", userVerification);
 router.post("/signin", signIn);
+router.post("/signinToken", signInViaToken)
 router.post("/signup", signUp);
 router.post("/reset-password", sendPasswordResetLink);
 router.post("/reset-password/:token", resetPassword);
