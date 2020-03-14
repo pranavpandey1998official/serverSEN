@@ -1,14 +1,13 @@
-
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const User = require("../../database/user");
+const User = require("../models/user");
 
 const {
   sendConfirmationMail,
   sendPasswordResetMail
-} = require("../../utils/mailSender.js");
+} = require("../services/mailSender");
 
 const saltRounds = 10;
 
@@ -16,7 +15,7 @@ const signIn = async(req, res) => {
     const { email, password } = req.body
     try {
       const users = await User.findUser(email);
-      const user=users.rows[0]
+      const user=users[0]
       if(!user) {
         return res.status(401).json({
           error: true,
@@ -86,7 +85,7 @@ const signUp = async(req, res) => {
 
   try {
     user = await User.findUser(email);
-    if(user.rows.length!=0 && user.rows[0].is_verified) {
+    if(user.length!=0 && user[0].is_verified) {
       return res.status(402).json({
         error: true,
         message: "email already exists"
@@ -121,7 +120,7 @@ const sendPasswordResetLink = async(req, res) => {
   const { email } = req.body;
   try {
     const users = await User.findUser(email);
-    const user=users.rows[0]
+    const user=users[0]
     if(!user) {
       return res.status(401).json({
         error: true,

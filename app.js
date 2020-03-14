@@ -6,9 +6,9 @@ require("dotenv").config();
 
 const app = express();
 
-const port = 5000 || process.env.PORT;
+const port = 3000 || process.env.PORT;
 
-const auth = require("./routers/auth");
+const auth = require("./routes/auth");
 
 app.use(helmet()); // Sanitization of requests
 app.use(bodyParser.urlencoded({

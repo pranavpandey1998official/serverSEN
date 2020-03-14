@@ -19,7 +19,7 @@ var transporter = nodemailer.createTransport({
 const sendConfirmationMail = (user_id,email,name) => {
 
   const token = jwt.sign({ user_id }, process.env.SECRET_KEY, { expiresIn: "5d" }); // Generate Token
-  const url = `http://localhost:5000/auth/${token}`;
+  const url = `http://localhost:3000/auth/${token}`;
   const mailOptions = {
     from: '"Where Should I Live No Reply" <noreply.whereshouldilive@gmail.com>',
     to: email,

@@ -1,8 +1,8 @@
-const connection = require('./connection');
+const connection = require('../connections/mysql_db');
 
 exports.findUser = async(email) => {
 	const query = {
-		text: 'SELECT * FROM users WHERE email=$1',
+		sql: 'SELECT * FROM users WHERE email=?',
 		values: [email],
 	}
 	const result =  await connection.query(query);
@@ -11,7 +11,7 @@ exports.findUser = async(email) => {
 
 exports.findUserViaId = async(userId) => {
 	const query = {
-		text: 'SELECT * FROM users WHERE user_id=$1',
+		sql: 'SELECT * FROM users WHERE user_id=?',
 		values: [userId],
 	}
 	const result =  await connection.query(query);
@@ -20,17 +20,16 @@ exports.findUserViaId = async(userId) => {
 
 exports.createUser = async (email, password, firstName, lastName) => {
 	const query = {
-		text: 'INSERT into users(email,password,first_name,last_name) values($1,$2,$3,$4)',
+		sql: 'INSERT into users(email,password,first_name,last_name) values(?,?,?,?)',
 		values: [email, password, firstName, lastName]
 	}
 	try{
-		await connection.query(query)
-		const newUser = await this.findUser(email)
-		return newUser.rows[0]
+		const result = await connection.query(query)
+		return result.insertId;
 	}
 	catch(e){
 		const query = {
-			text: 'DELETE from users where email = $1',
+			sql: 'DELETE from users where email = ?',
 			values: [email]
 		}
 		await connection.query(query)
@@ -40,7 +39,7 @@ exports.createUser = async (email, password, firstName, lastName) => {
 
 exports.setEmailVerified = async (user_id) => {
 	const query = {
-		text: 'UPDATE users SET is_verified=true where user_id= $1',
+		sql: 'UPDATE users SET is_verified=true where user_id= ?',
 		values: [user_id]
 	}
 	await connection.query(query)
@@ -49,8 +48,8 @@ exports.setEmailVerified = async (user_id) => {
 
 exports.resetPassword = async (user_id, newPassword) => {
 	const query = {
-		text: 'UPDATE users SET password=$2 where user_id= $1',
-		values: [user_id, newPassword]
+		sql: 'UPDATE users SET password=? where user_id= ?',
+		values: [newPassword, user_id]
 	}
 	await connection.query(query)
 	return ;
