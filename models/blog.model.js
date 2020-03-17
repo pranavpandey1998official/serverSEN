@@ -4,13 +4,11 @@ const getBlogs = async () => {
     let query = {
         sql: "select * from blogs"
     };
-    try {
-        const result = await connection.query(query);
-        return result;
-    }catch(err) {
-        console.log(err);
-        throw err;
-    }
+
+    connection.query(query, (err, result) => {
+        if(err) throw err;
+        else return result;
+    })
     
 };
 
@@ -20,13 +18,10 @@ const addBlog = async (blog) => {
         values: [blog]
     };
 
-    try {
-        const result = await connection.query(query);
-        return result.insertId;
-    }catch(err) {
-        console.log(err);
-        throw err;
-    }
+    connection.query(query, (err, result) => {
+        if(err) throw err;
+        else return result.insertId;
+    })
     
 };
 
@@ -35,11 +30,10 @@ const editBlog  = async (blog, blogId) => {
         sql:"update blogs set ? where blogId = ?",
         values: [blog, blogId]
     };
-    try {
-        await connection.query(query);
-    }catch(err) {
-        throw err;
-    }
+    connection.query(query, (err, result) => {
+        if(err) throw err;
+        else return;
+    })
 };
 
 const deleteBlog = async (blogId) => {
@@ -48,11 +42,10 @@ const deleteBlog = async (blogId) => {
         values: [blogId]
     };
 
-    try {
-        await connection.query(query);
-    }catch(err) {
-        throw err;
-    }
+    connection.query(query, (err, result) => {
+        if(err) throw err;
+        else return;
+    })
 };
 
 const getBlogById = async (blogId) => {
@@ -60,13 +53,10 @@ const getBlogById = async (blogId) => {
         sql: "select * from blogs where blogId = ?",
         values: [blogId]
     };
-    try {
-        const result = await connection.query(query);
-        return result;
-    }catch(err) {
-        console.log(err);
-        throw err;
-    }
+    connection.query(query, (err, result) => {
+        if(err) throw err;
+        else return result;
+    })
     
 };
 

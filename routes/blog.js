@@ -40,7 +40,7 @@ const updateBlog = async (req, res, next) => {
     const blogId = req.params.blogId;
     const uesrId = req.body.userId;
     checkBlogAndUser(blogId, userId)
-    .then(v => {
+    .then(async (v) => {
         try {
             await Blog.editBlog(updateBlog, blogId);
             res.status(201).json({
@@ -66,7 +66,7 @@ const deleteBlog = async (req, res, next) => {
     const blogId = req.params.blogId;
     const uesrId = req.body.userId;
     checkBlogAndUser(blogId, userId)
-    .then(v => {
+    .then(async (v) => {
         try {
             await Blog.deleteBlog(blogId);
             res.status(201).json({
@@ -90,10 +90,10 @@ const deleteBlog = async (req, res, next) => {
 }
 
 const checkBlogAndUser = async (blogId, userId) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
         try {
             const blog = await Blog.getBlogById(blogId);
-            if(blog.length!=0 && blog[0].userId == userId) resolve(true);
+            if(blog!=null && blog[0].userId == userId) resolve(true);
             else reject(true);
         }catch (e) {
             console.log(e);

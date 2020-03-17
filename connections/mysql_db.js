@@ -12,7 +12,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("connected to database!" + process.env.mysql_host);
+    console.log("connected to database!");
 }); 
 
 module.exports = connection;
