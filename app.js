@@ -8,8 +8,9 @@ const app = express();
 
 const port = 3000 || process.env.PORT;
 
-const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
 const blogRoutes = require('./routes/blog');
+const propertyRoutes = require('./routes/property');
 
 app.use(helmet()); // Sanitization of requests
 app.use(bodyParser.urlencoded({
@@ -18,8 +19,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json()); // Parsing requests as in JSON format
 app.use(cors()); //Use CORS
 
-app.use("/auth", authRoutes);
+app.use("/auth", userRoutes);
 app.use("/blogs", blogRoutes);
+app.use("/property", propertyRoutes);
 
 
 // Error handling
