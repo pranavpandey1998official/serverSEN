@@ -19,6 +19,7 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json()); // Parsing requests as in JSON format
 app.use(cors()); //Use CORS
 
+app.use(express.static('static'));
 app.use("/auth", userRoutes);
 app.use("/blogs", blogRoutes);
 app.use("/property", propertyRoutes);
