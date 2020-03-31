@@ -1,22 +1,24 @@
 const connection = require('../connections/mysql_db');
 
-const getAllProperty = async () => {
+const getAllProperty =  () => {
     let query = {
-        sql: `SELECT p.*, i.imagePath FROM proprty as p
+        sql: `SELECT p.*, i.imagePath FROM property as p
               NATURAL JOIN property_photos as i
               WHERE i.photoId = 1`
     };
-
-    connection.query(query, (err, result) => {
-        if(err) throw err;
-        else return result.asPromise();
-    });
+    return new Promise(function(res, rej) {
+        connection.query(query, (err, result) => {
+            console.log(result);
+            if(err) throw rej(err);
+            else return res(result);
+        });
+    })
 };
 
 const getPropertyById = async (propertyId) => {
     let query = {
-        sql: `SELECT * FROM proprty as p
-              WHERE proprtyId = ?`,
+        sql: `SELECT * FROM property as p
+              WHERE propertyId = ?`,
         values: [propertyId]      
     };
 
@@ -24,8 +26,8 @@ const getPropertyById = async (propertyId) => {
         if(err) throw err;
         else {
             let query = {
-                sql: `SELECT * FROM proprty_photos as p
-                      WHERE proprtyId = ?`,
+                sql: `SELECT * FROM property_photos as p
+                      WHERE propertyId = ?`,
                 values: [propertyId]   
             };
 
@@ -42,7 +44,7 @@ const getPropertyById = async (propertyId) => {
 
 const getFilteredProperty = async (p) => {
     let query = {
-        sql: `SELECT p.*, i.imagePath FROM proprty as p
+        sql: `SELECT p.*, i.imagePath FROM property as p
               NATURAL JOIN property_photos as i
               WHERE i.photoId = 1 AND
               p.noOfBedrooms = ? AND
