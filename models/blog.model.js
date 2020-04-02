@@ -4,11 +4,13 @@ const getBlogs = async () => {
     let query = {
         sql: "select * from blogs"
     };
-
-    connection.query(query, (err, result) => {
-        if(err) throw err;
-        else return result;
+    return new Promise(function(resolve, reject){
+        connection.query(query, (err, result) => {
+            if(err) reject(err);
+            else resolve(result);
+        })
     })
+    
     
 };
 
@@ -18,10 +20,13 @@ const addBlog = async (blog) => {
         values: [blog]
     };
 
-    connection.query(query, (err, result) => {
-        if(err) throw err;
-        else return result.insertId;
+    return new Promise(function(resolve, reject){
+        connection.query(query, (err, result) => {
+            if(err) reject(err);
+            else resolve(result.insertId);
+        })
     })
+    
     
 };
 
@@ -30,10 +35,14 @@ const editBlog  = async (blog, blogId) => {
         sql:"update blogs set ? where blogId = ?",
         values: [blog, blogId]
     };
-    connection.query(query, (err, result) => {
-        if(err) throw err;
-        else return;
+
+    return new Promise(function(resolve, reject){
+        connection.query(query, (err, result) => {
+            if(err) reject(err);
+            else return;
+        })
     })
+    
 };
 
 const deleteBlog = async (blogId) => {
@@ -42,10 +51,13 @@ const deleteBlog = async (blogId) => {
         values: [blogId]
     };
 
-    connection.query(query, (err, result) => {
-        if(err) throw err;
-        else return;
+    return new Promise(function(resolve, reject){
+        connection.query(query, (err, result) => {
+            if(err) reject(err);
+            else return;
+        })
     })
+    
 };
 
 const getBlogById = async (blogId) => {
@@ -53,10 +65,14 @@ const getBlogById = async (blogId) => {
         sql: "select * from blogs where blogId = ?",
         values: [blogId]
     };
-    connection.query(query, (err, result) => {
-        if(err) throw err;
-        else return result;
+
+    return new Promise(function(resolve, reject){
+        connection.query(query, (err, result) => {
+            if(err) reject(err);
+            else resolve(result);
+        })
     })
+    
     
 };
 
