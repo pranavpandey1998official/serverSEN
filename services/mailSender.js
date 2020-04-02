@@ -2,6 +2,8 @@ const nodemailer = require("nodemailer");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+const currentURL = process.env.CURRENT_URL || 'http://localhost:3000';
+
 var transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: "587",
@@ -19,7 +21,7 @@ var transporter = nodemailer.createTransport({
 const sendConfirmationMail = (user_id,email,name) => {
 
   const token = jwt.sign({ user_id }, process.env.SECRET_KEY, { expiresIn: "5d" }); // Generate Token
-  const url = `http://localhost:3000/auth/${token}`;
+  const url = currentURL + `/auth/${token}`;
   const mailOptions = {
     from: '"Where Should I Live No Reply" <noreply.whereshouldilive@gmail.com>',
     to: email,
@@ -41,7 +43,7 @@ const sendConfirmationMail = (user_id,email,name) => {
 
 const sendPasswordResetMail = (email, user_id) => {
   const token = jwt.sign({ user_id }, process.env.SECRET_KEY, { expiresIn: "5d" }); // Generate Token
-  const url = `http://localhost:3000/reset-password/${token}`;
+  const url = currentURL + `/reset-password/${token}`;
 
   const mailOptions = {
     from: '"Where Should I Live No Reply" <noreply.whereshouldilive@gmail.com>',

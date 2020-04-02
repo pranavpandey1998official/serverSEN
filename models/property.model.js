@@ -8,14 +8,13 @@ const getAllProperty =  () => {
     };
     return new Promise(function(resolve, reject) {
         connection.query(query, (err, result) => {
-            console.log(result);
             if(err) reject(err);
             else resolve(result);
         });
     })
 };
 
-const getPropertyById = async (propertyId) => {
+const getPropertyById = (propertyId) => {
     let query = {
         sql: `SELECT * FROM property as p
               WHERE propertyId = ?`,
@@ -32,7 +31,6 @@ const getPropertyById = async (propertyId) => {
                 };
     
                 connection.query(query, (err2, result2) => {
-                    // console.log(result2);
                     if(err) reject(err2);
                     else {
                         result[0].images = result2;
@@ -45,33 +43,31 @@ const getPropertyById = async (propertyId) => {
    
 };
 
-const getFilteredProperty = async (p) => {
-    console.log(p);
+const getFilteredProperty = (p) => {
+    console.log(p)
     let query = {
         sql: `SELECT p.*, i.imagePath FROM property as p
               NATURAL JOIN property_photos as i
-              WHERE i.photoId = 1 AND
-              p.price BETWEEN ? AND ? 
-              AND p.totalSqft BETWEEN ? AND ?`,
-        values: [Number(p.price.min), Number(p.price.max), p.totalSqft.min, p.totalSqft.max]
+              WHERE i.photoId = 1 `
     };
-
-    if(p.gym) query.sql + " AND p.distanceToNearestGym < 2.5";
-    if(p.bath) query.sql + " AND p.distanceToNearestSchool < 2.5";
-    if(p.hosp) query.sql + " AND p.distanceToNearestHospital < 2.5";
-    if(p.noOfBalconies) query.sql + `AND p.noOfBalconies = ${noOfBalconies}`;
-    if(p.noOfBathrooms) query.sql + `AND p.noOfBathrooms = ${noOfBathrooms}`;
-    if(p.noOfBedrooms) query.sql + `AND p.noOfBedrooms = ${noOfBedrooms}`;
-
-    console.log(query);
+    if(p.price) query.sql += ` AND p.price BETWEEN ${Number(p.price.min)} AND ${Number(p.price.max)} `;
+    if(p.totalSqft) query.sql += ` AND p.totalSqft BETWEEN ${p.totalSqft.min} AND ${p.totalSqft.max} `;
+    if(p.isGym) query.sql += " AND p.distanceToNearestGym < 2.5 ";
+    if(p.isSchool) query.sql += " AND p.distanceToNearestSchool < 2.5 ";
+    if(p.isHospital) query.sql += " AND p.distanceToNearestHospital < 2.5 ";
+    if(p.noOfBalconies) query.sql += ` AND p.noOfBalconies = ${p.pricenoOfBalconies} `;
+    if(p.noOfBathrooms) query.sql += ` AND p.noOfBathrooms = ${p.noOfBathrooms} `;
+    if(p.noOfBedrooms) query.sql += ` AND p.noOfBedrooms = ${p.noOfBedrooms} `;
+    console.log(query.sql);
 
     return new Promise(function(resolve, reject) {
         connection.query(query, (err, result) => {
             if(err){
-                
                 reject(err);
             } 
-            else resolve(result);
+            else {
+                resolve(result);
+            }
         })
     })
     

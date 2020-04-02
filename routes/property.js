@@ -37,7 +37,7 @@ const getPropertyById = async (req, res, next) => {
 }
 
 const getFilteredProperty = async (req, res, next) => {
-    const filter = req.body.filter;
+    const filter = req.body;
     try {
         const property = await Property.getFilteredProperty(filter);
         res.status(200).json({
