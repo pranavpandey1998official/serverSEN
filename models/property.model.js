@@ -24,19 +24,23 @@ const getPropertyById = (propertyId) => {
         connection.query(query, (err, result) => {
             if(err) throw reject(err);
             else {
-                let query = {
-                    sql: `SELECT imagePath, photoId FROM property_photos as p
-                          WHERE propertyId = ?`,
-                    values: [propertyId]   
-                };
-    
-                connection.query(query, (err2, result2) => {
-                    if(err) reject(err2);
-                    else {
-                        result[0].images = result2;
-                        resolve(result);
-                    }
-                })
+                if(result.length == 0) reject({err: "no such property found"});
+                else {
+                    let query = {
+                        sql: `SELECT imagePath, photoId FROM property_photos as p
+                              WHERE propertyId = ?`,
+                        values: [propertyId]   
+                    };
+        
+                    connection.query(query, (err2, result2) => {
+                        if(err) reject(err2);
+                        else {
+                            result[0].images = result2;
+                            resolve(result);
+                        }
+                    })
+                }
+                
             }
         });
     })
@@ -62,12 +66,8 @@ const getFilteredProperty = (p) => {
 
     return new Promise(function(resolve, reject) {
         connection.query(query, (err, result) => {
-            if(err){
-                reject(err);
-            } 
-            else {
-                resolve(result);
-            }
+            if(err) reject(err); 
+            else resolve(result);
         })
     })
     

@@ -39,7 +39,7 @@ const editBlog  = async (blog, blogId) => {
     return new Promise(function(resolve, reject){
         connection.query(query, (err, result) => {
             if(err) reject(err);
-            else return;
+            else resolve();
         })
     })
     
@@ -54,7 +54,7 @@ const deleteBlog = async (blogId) => {
     return new Promise(function(resolve, reject){
         connection.query(query, (err, result) => {
             if(err) reject(err);
-            else return;
+            else resolve();
         })
     })
     
