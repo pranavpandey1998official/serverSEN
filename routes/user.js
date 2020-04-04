@@ -14,23 +14,27 @@ const saltRounds = 10;
 const signIn = async(req, res) => {
     const { email, password } = req.body
     try {
-      const users = await User.findUser(email);
-      const user=users[0]
-      if(!user) {
+      const resp = await User.findUser(email);
+
+      if(resp.length == 0) {
         return res.status(401).json({
           error: true,
           message: "either email or password is wrong"
         })
       }
+
+      const user = resp[0];
+
       if(!user.is_verified) {
         return res.status(401).json({
           error: true,
           message: "Email not verified"
         })
       }
+
       bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
-          return res.status(400).json({ message: "Auth failed!.." });
+          return res.status(401).json({ message: "Auth failed!.." });
         }
         if(result) {
           const {userId, email, firstName, lastName } = user;
@@ -82,12 +86,13 @@ const userVerification = async(req, res) => {
 
 const signUp = async(req, res) => {
   console.log(req.body);
-  const { email, password, firstName, lastName } = req.body.userData;
+  const { email, password, firstName, lastName } = req.body;
 
   try {
-    user = await User.findUser(email);
+    let user = await User.findUser(email);
     console.log("user: "+user);
-    if(user!=null && user[0].is_verified) {
+
+    if(user.length != 0) {
       return res.status(402).json({
         error: true,
         message: "email already exists"
@@ -102,8 +107,8 @@ const signUp = async(req, res) => {
   }
   bcrypt.genSalt(saltRounds, function(err, salt) {
      bcrypt.hash(password, salt, (err, hash) => {
-        User.createUser(email,hash,firstName,lastName).then((user)  => {
-          sendConfirmationMail(user.userId, user.email, user.firstName);
+        User.createUser(email,hash,firstName,lastName).then((userId)  => {
+          sendConfirmationMail(userId, email, firstName);
           return res.status(201).json({
             message: 'User Created Successfully'
           })
@@ -121,14 +126,15 @@ const signUp = async(req, res) => {
 const sendPasswordResetLink = async(req, res) => {
   const { email } = req.body;
   try {
-    const users = await User.findUser(email);
-    const user=users[0]
-    if(!user) {
+    const resp = await User.findUser(email);
+    if(resp.length == 0) {
       return res.status(401).json({
         error: true,
         message: "Error email not registered"
       })
     }
+
+    const user = resp[0];
     if(!user.is_verified) {
       return res.status(401).json({
         error: true,
@@ -157,7 +163,7 @@ const resetPassword = (req, res) => {
         })
       }).catch((e) => res.status(500).json({
         error: true, 
-        message: "Database error. Failed to create a user"
+        message: "Database error! please try again later."
       })
       )
     });
@@ -175,14 +181,15 @@ const signInViaToken = async(req, res) => {
   const decyptToken = jwt.verify(token, process.env.SECRET_KEY);
   try {
     const { userId } = decyptToken;
-    users = await User.findUserViaId(userId);
-    const user=users.rows[0]
-    if(!user) {
+    let resp = await User.findUserViaId(userId);
+    
+    if(resp.length == 0) {
       return res.status(402).json({
         error: true,
-        message: "email already exists"
+        message: "No such user exists"
       })
     }
+    const user = resp[0];
     const { email, firstName, lastName } = user;
     return res.status(200).json({
       message: "Successful Authentication",
@@ -198,7 +205,7 @@ const signInViaToken = async(req, res) => {
     console.log(e)
     return res.status(500).json({
       error: true, 
-      message: "Database error. Failed to create a user"
+      message: "Database error! please try again later."
     })
   }
 }

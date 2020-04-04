@@ -13,7 +13,7 @@ const getProperty = async (req, res, next) => {
         console.log(e);
         res.status(500).json({
             error: true, 
-            message: "Database error. Failed to create a user"
+            message: "Database error!"
         });
     }
 };
@@ -31,7 +31,7 @@ const getPropertyById = async (req, res, next) => {
         console.log(e);
         res.status(500).json({
             error: true, 
-            message: "Database error. Failed to create a user"
+            message: "Database error!"
         });
     }
 }
@@ -48,7 +48,7 @@ const getFilteredProperty = async (req, res, next) => {
         console.log(e);
         res.status(500).json({
             error: true, 
-            message: "Database error. Failed to create a user"
+            message: "Database error!"
         });
     }
 } 
