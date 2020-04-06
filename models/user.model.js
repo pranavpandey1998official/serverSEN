@@ -76,3 +76,17 @@ exports.resetPassword = (user_id, newPassword) => {
 	})
 	
 }
+
+exports.removeUser = (email) => {
+	const query = {
+		sql: 'DELETE from users  where email= ?',
+		values: [email]
+	}
+
+	return new Promise((resolve, reject) => {
+		connection.query(query, (err, result) => {
+			if(err) reject(err);
+			else resolve();
+		})
+	})	
+}
