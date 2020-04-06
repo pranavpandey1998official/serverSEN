@@ -65,7 +65,7 @@ const userVerification = async(req, res) => {
 
   try {
     await User.setEmailVerified(userId);
-    return res.set('Location','/info/emailVerified' ).status(301).json({
+    return res.set('Location','https://naughty-goodall-3caf39.netlify.com/info/emailVerified' ).status(301).json({
       message: "user verified successfully"
     })
   } catch(e) {
