@@ -36,8 +36,9 @@ const editReview  = (reviewText, reviewId) => {
 
     return new Promise(function(resolve, reject){
         connection.query(query, (err, result) => {
+            console.log(result);
             if(err) reject(err);
-            else resolve();
+            else resolve(result);
         })
     }) 
 };
@@ -51,7 +52,7 @@ const deleteReview = (reviewId) => {
     return new Promise(function(resolve, reject){
         connection.query(query, (err, result) => {
             if(err) reject(err);
-            else resolve();
+            else resolve(result);
         })
     })
     

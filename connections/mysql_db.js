@@ -16,4 +16,10 @@ connection.connect(function(err) {
 });
 
 
+// let query = "select * from users";
+// // let query = "update users set is_verified = 1 where email = 'matajay@gmail.com'";
+// connection.query(query, (e, t)=> {
+//   console.log(t);
+// })
+
 module.exports = connection;
