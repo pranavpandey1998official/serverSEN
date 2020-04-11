@@ -54,6 +54,7 @@ const getFilteredProperty = (p) => {
               NATURAL JOIN property_photos as i
               WHERE i.photoId = 1 `
     };
+    if(p.type) query.sql += ` AND p.type = "${p.type}" `
     if(p.price) query.sql += ` AND p.price BETWEEN ${Number(p.price.min)} AND ${Number(p.price.max)} `;
     if(p.totalSqft) query.sql += ` AND p.totalSqft BETWEEN ${p.totalSqft.min} AND ${p.totalSqft.max} `;
     if(p.isGym) query.sql += " AND p.distanceToNearestGym < 2.5 ";
@@ -62,7 +63,7 @@ const getFilteredProperty = (p) => {
     if(p.noOfBalconies) query.sql += ` AND p.noOfBalconies = ${p.noOfBalconies} `;
     if(p.noOfBathrooms) query.sql += ` AND p.noOfBathrooms = ${p.noOfBathrooms} `;
     if(p.noOfBedrooms) query.sql += ` AND p.noOfBedrooms = ${p.noOfBedrooms} `;
-    console.log(query.sql);
+    if(p.isFurnished) query.sql += `AND p.furnished = 1`;
 
     return new Promise(function(resolve, reject) {
         connection.query(query, (err, result) => {
