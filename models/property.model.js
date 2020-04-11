@@ -59,7 +59,7 @@ const getFilteredProperty = (p) => {
     if(p.isGym) query.sql += " AND p.distanceToNearestGym < 2.5 ";
     if(p.isSchool) query.sql += " AND p.distanceToNearestSchool < 2.5 ";
     if(p.isHospital) query.sql += " AND p.distanceToNearestHospital < 2.5 ";
-    if(p.noOfBalconies) query.sql += ` AND p.noOfBalconies = ${p.pricenoOfBalconies} `;
+    if(p.noOfBalconies) query.sql += ` AND p.noOfBalconies = ${p.noOfBalconies} `;
     if(p.noOfBathrooms) query.sql += ` AND p.noOfBathrooms = ${p.noOfBathrooms} `;
     if(p.noOfBedrooms) query.sql += ` AND p.noOfBedrooms = ${p.noOfBedrooms} `;
     console.log(query.sql);
