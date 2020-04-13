@@ -19,6 +19,15 @@ const getAllBlogs = (req, res, next) => {
 }
 
 const addBlog = async (req, res, next) => {
+    const userId = req.userId;
+    const postUserId = req.body.blog.userId;
+    if(userId != postUserId) {
+        return res.status(401).json({
+            error: true,
+            message: "Not authorised to perform this operation"
+        })
+    }
+
     const newBlog = req.body.blog;
     try {
         const blogId = await Blog.addBlog(newBlog);
@@ -39,7 +48,13 @@ const updateBlog = async (req, res, next) => {
     const updatedBlog = req.body.updatedBlog;
     const blogId = req.params.blogId;
     try {
-        await Blog.editBlog(updatedBlog, blogId);
+        const r = await Blog.editBlog(updatedBlog, blogId);
+        if(r.affectedRows == 0) {
+            return res.status(400).json({
+                error: true,
+                message: "review does not exist"
+            });
+        }
         res.status(201).json({
             success: true
         });
@@ -55,7 +70,13 @@ const updateBlog = async (req, res, next) => {
 const deleteBlog = async (req, res, next) => {
     const blogId = req.params.blogId;
     try {
-        await Blog.deleteBlog(blogId);
+        const r = await Blog.deleteBlog(blogId);
+        if(r.affectedRows == 0) {
+            return res.status(400).json({
+                error: true,
+                message: "review does not exist"
+            });
+        }
         res.status(201).json({
             success: true
         });
