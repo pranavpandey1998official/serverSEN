@@ -36,7 +36,6 @@ const editReview  = (reviewText, reviewId) => {
 
     return new Promise(function(resolve, reject){
         connection.query(query, (err, result) => {
-            console.log(result);
             if(err) reject(err);
             else resolve(result);
         })

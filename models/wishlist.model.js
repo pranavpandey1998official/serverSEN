@@ -26,7 +26,6 @@ const addToWishlist = (body) => {
 
     return new Promise(function(resolve, reject) {
         connection.query(query, (err, result) => {
-            // console.log("add" + (JSON.stringify(result)));
             if(err) reject(err);
             else resolve();
         })
@@ -41,33 +40,14 @@ const deleteFromWishlist = (userId, propertId) => {
 
     return new Promise(function(resolve, reject){
         connection.query(query, (err, result) => {
-            // console.log(result);
             if(err) reject(err);
             else resolve(result);
         })
     })
 };
 
-// const getWishlistFromPropertyId = (propertyId, userId) => {
-//     let query = {
-//         sql: "select * from wishlist where propertyId = ? and userId = ?",
-//         values: [propertyId, userId]
-//     }
-
-//     return new Promise(function(resolve, reject) {
-//         connection.query(query, (err, result) => {
-//             if(err) reject(err);
-//             else {
-//                 if(result.length == 0) reject({err: "no such wishlist found"});
-//                 else resolve(result[0]);
-//             }
-//         });
-//     });
-// }
-
 module.exports = {
     getWishlist,
     addToWishlist,
-    // getWishlistFromPropertyId
     deleteFromWishlist
 };

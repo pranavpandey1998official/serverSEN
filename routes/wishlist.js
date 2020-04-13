@@ -67,28 +67,6 @@ const deleteWishlist = (req, res, next) => {
     })
 };
 
-// const checkAuthor = (req, res, next) => {
-//     const propertyId = req.params.propId;
-//     const userId = req.params.userId;
-
-//     Wishlist.getWishlistFromPropertyId(propertyId, userId).then(value => {
-//         if(value.userId != req.userId){
-//             return res.status(401).json({
-//                 error: true,
-//                 message: "Unothorised for such operation"
-//             });
-//         }
-//         next();
-        
-//     }).catch(err => {
-//         console.log(err);
-//         return res.status(500).json({
-//             error: true, 
-//             message: "Database error!"
-//           })
-//     })
-// }
-
 router.get("", checkAuth, getWishlist);
 router.post("", checkAuth, addWishlist);
 router.delete("/:propId", checkAuth, deleteWishlist);
