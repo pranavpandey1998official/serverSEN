@@ -1,7 +1,7 @@
 jest.mock('./../services/mailSender');
 
 const request = require('supertest');
-const {app} = require('./../app');
+const {app, server} = require('./../app');
 const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken')
@@ -181,6 +181,10 @@ test('should block signin for invalid token provided', (done) => {
             expect(res.body.message).toBe("Invalid token provided");
         })
         .end(done);
+});
+
+afterAll(async () => {
+    await server.close();        
 });
 
 
