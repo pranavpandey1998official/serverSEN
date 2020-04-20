@@ -3,8 +3,8 @@ const connection = require('../connections/mysql_db');
 const getAllProperty =  () => {
     let query = {
         sql: `SELECT p.*, i.imagePath FROM property as p
-              NATURAL JOIN property_photos as i`,
-        values: []
+              NATURAL JOIN property_photos as i
+              WHERE i.photoId = 1`
     };
     return new Promise(function(resolve, reject) {
         connection.query(query, (err, result) => {
@@ -52,7 +52,7 @@ const getFilteredProperty = (p) => {
     let query = {
         sql: `SELECT p.*, i.imagePath FROM property as p
               NATURAL JOIN property_photos as i
-              WHERE i.photoId > 0 `
+              WHERE i.photoId = 1`
     };
     if(p.price) query.sql += ` AND p.price BETWEEN ${Number(p.price.min)} AND ${Number(p.price.max)} `;
     if(p.totalSqft) query.sql += ` AND p.totalSqft BETWEEN ${p.totalSqft.min} AND ${p.totalSqft.max} `;
