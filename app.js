@@ -12,6 +12,7 @@ const userRoutes = require("./routes/user");
 const blogRoutes = require('./routes/blog');
 const propertyRoutes = require('./routes/property');
 const propertyReviewRoutes = require('./routes/property_review');
+const WishlistRoutes = require("./routes/wishlist");
 
 app.use(helmet()); // Sanitization of requests
 app.use(bodyParser.urlencoded({
@@ -25,6 +26,7 @@ app.use("/auth", userRoutes);
 app.use("/blogs", blogRoutes);
 app.use("/property", propertyRoutes);
 app.use("/property_review", propertyReviewRoutes);
+app.use("/wishlist", WishlistRoutes);
 
 
 // Error handling
@@ -33,4 +35,6 @@ app.use((req, res) => {
 });
 
 // Start Server
-app.listen(port, () => console.log("Server running on port", port, "..."));
+var server = app.listen(port, () => console.log("Server running on port", port, "..."));
+
+module.exports = {app, server}

@@ -52,7 +52,7 @@ const getFilteredProperty = (p) => {
     let query = {
         sql: `SELECT p.*, i.imagePath FROM property as p
               NATURAL JOIN property_photos as i
-              WHERE i.photoId = 1 `
+              WHERE i.photoId = 1`
     };
     if(p.type) query.sql += ` AND p.type = "${p.type}" `
     if(p.price) query.sql += ` AND p.price BETWEEN ${Number(p.price.min)} AND ${Number(p.price.max)} `;
@@ -71,9 +71,7 @@ const getFilteredProperty = (p) => {
             else resolve(result);
         })
     })
-    
-
-} 
+};
 
 module.exports = {
     getAllProperty,
