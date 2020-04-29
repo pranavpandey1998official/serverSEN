@@ -2,7 +2,9 @@ const connection = require('../connections/mysql_db');
 
 const getAllReviews = (propertId) => {
     const query = {
-        sql: "select * from review where propertyId = ?",
+        sql: `select r.*, u.firstName, u.lastName from review as r
+              natural join users as u
+              where r.propertyId = ?`,
         values: [propertId]
     };
 

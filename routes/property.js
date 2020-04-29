@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Property = require('../models/property.model');
+const jwt = require('jsonwebtoken');
+const { getWishlistForUser } = require("../models/wishlist.model");
 
 const getProperty = async (req, res, next) => {
     try {
@@ -20,12 +22,17 @@ const getProperty = async (req, res, next) => {
 
 const getPropertyById = async (req, res, next) => {
     const propertyId = req.params.id;
+    const token = req.headers.authorization.split(" ")[1];
+
     try {
+        const isWishlist = await getIsWishlisted(token,propertyId)
+
         const property = await Property.getPropertyById(propertyId);
         console.log("gsggg:  "+property);
         res.status(200).json({
             success: true,
-            property: property
+            property: property,
+            isWishlist: isWishlist
         });
     } catch(e) {
         console.log(e);
@@ -52,6 +59,26 @@ const getFilteredProperty = async (req, res, next) => {
         });
     }
 } 
+
+const getIsWishlisted = (token, propertyId) => {
+    return new Promise((resolve, reject) => {
+        if(!token) resolve(false);
+        else {
+            jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+                if(err) {
+                    reject(err);
+                }
+                const { userId } = decoded;
+                getWishlistForUser(propertyId, userId).then(result => {
+                    if(result.length == 0) resolve(false);
+                    else resolve(true);
+                }).catch(e => {
+                    reject(e);
+                })
+            });
+        }
+    })
+}
 
 router.get("", getProperty);
 router.get("/:id", getPropertyById);

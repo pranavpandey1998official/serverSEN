@@ -46,8 +46,24 @@ const deleteFromWishlist = (userId, propertId) => {
     })
 };
 
+const getWishlistForUser = (propertyId, userId) => {
+    let query = {
+        sql: `select * from wishlist
+              where userId = ? and propertyId = ?`,
+        values: [userId, propertyId]     
+    };
+
+    return new Promise((resolve, reject) => {
+        connection.query(query, (err, result) => {
+            if(err) reject(err);
+            else resolve(result);
+        })
+    })
+}
+
 module.exports = {
     getWishlist,
     addToWishlist,
-    deleteFromWishlist
+    deleteFromWishlist,
+    getWishlistForUser
 };
