@@ -46,6 +46,7 @@ const signIn = async(req, res) => {
             message: "Successful Authentication",
             token,
             user: {
+              userId,
               email,
               firstName,
               lastName
