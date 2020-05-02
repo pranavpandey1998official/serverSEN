@@ -193,11 +193,12 @@ const signInViaToken = async(req, res) => {
       })
     }
     const user = resp[0];
-    const { email, firstName, lastName } = user;
+    const {userId, email, firstName, lastName } = user;
     return res.status(200).json({
       message: "Successful Authentication",
       token,
       user: {
+        userId,
         email,
         firstName,
         lastName
