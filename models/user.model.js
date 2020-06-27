@@ -8,7 +8,6 @@ exports.findUser = (email) => {
 
 	return new Promise((resolve, reject) => {
 		connection.query(query, (err, result) => {
-			console.log(result);
 			if(err) reject(err);
 			else resolve(result);
 		})
