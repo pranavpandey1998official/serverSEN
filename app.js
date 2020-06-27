@@ -6,9 +6,13 @@ require("dotenv").config();
 
 const app = express();
 
-const port = 5000 || process.env.PORT;
+const port = process.env.PORT || 5000;
 
-const auth = require("./routers/auth");
+const userRoutes = require("./routes/user");
+const blogRoutes = require('./routes/blog');
+const propertyRoutes = require('./routes/property');
+const propertyReviewRoutes = require('./routes/property_review');
+const WishlistRoutes = require("./routes/wishlist");
 
 app.use(helmet()); // Sanitization of requests
 app.use(bodyParser.urlencoded({
@@ -17,7 +21,12 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json()); // Parsing requests as in JSON format
 app.use(cors()); //Use CORS
 
-app.use("/auth", auth);
+app.use(express.static('static'));
+app.use("/auth", userRoutes);
+app.use("/blogs", blogRoutes);
+app.use("/property", propertyRoutes);
+app.use("/property_review", propertyReviewRoutes);
+app.use("/wishlist", WishlistRoutes);
 
 
 // Error handling
