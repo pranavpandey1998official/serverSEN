@@ -22,13 +22,11 @@ const getProperty = async (req, res, next) => {
 
 const getPropertyById = async (req, res, next) => {
     const propertyId = req.params.id;
-    const token = req.headers.authorization.split(" ")[1];
-
+    const token = req.headers.authorization && req.headers.authorization.split(" ")[1];
     try {
         const isWishlist = await getIsWishlisted(token,propertyId)
 
         const property = await Property.getPropertyById(propertyId);
-        console.log("gsggg:  "+property);
         res.status(200).json({
             success: true,
             property: property,

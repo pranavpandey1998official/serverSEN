@@ -33,10 +33,13 @@ const signIn = async(req, res) => {
       }
 
       bcrypt.compare(password, user.password, (err, result) => {
-        if (err) {
-          return res.status(401).json({ message: "Auth failed!.." });
+        if(err){
+          reject('Auth failed!..')
         }
-        if(result) {
+        if (!result) {
+          return res.status(400).json({ message: "Email and password combination is wrong", error: true });
+        }
+        else{
           const {userId, email, firstName, lastName } = user;
           const token = jwt.sign({userId},process.env.SECRET_KEY, { expiresIn: "5h"})
           return res.status(200).json({
@@ -50,7 +53,6 @@ const signIn = async(req, res) => {
             }
           })
         }
-        return res.status(400).json({ message: "Email and password combination is wrong", error: true });
       })
     }catch(e) {
       res.status(500).json({
@@ -66,7 +68,7 @@ const userVerification = async(req, res) => {
 
   try {
     await User.setEmailVerified(userId);
-    return res.set('Location','/info/emailVerified' ).status(301).json({
+    return res.set('Location','https://naughty-goodall-3caf39.netlify.com/info/emailVerified' ).status(301).json({
       message: "user verified successfully"
     })
   } catch(e) {
@@ -177,8 +179,8 @@ const signInViaToken = async(req, res) => {
       message: "Token Not Provided"
     })
   }
-  const decyptToken = jwt.verify(token, process.env.SECRET_KEY);
   try {
+    const decyptToken = jwt.verify(token, process.env.SECRET_KEY);
     const { userId } = decyptToken;
     let resp = await User.findUserViaId(userId);
     
@@ -194,6 +196,7 @@ const signInViaToken = async(req, res) => {
       message: "Successful Authentication",
       token,
       user: {
+        userId,
         email,
         firstName,
         lastName
@@ -202,9 +205,9 @@ const signInViaToken = async(req, res) => {
 
   }catch(e) {
     console.log(e)
-    return res.status(500).json({
+    return res.status(402).json({
       error: true, 
-      message: "Database error! please try again later."
+      message: "Invalid token provided"
     })
   }
 }

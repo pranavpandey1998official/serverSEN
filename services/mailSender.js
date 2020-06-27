@@ -43,7 +43,7 @@ const sendConfirmationMail = (user_id,email,name) => {
 
 const sendPasswordResetMail = (email, user_id) => {
   const token = jwt.sign({ user_id }, process.env.SECRET_KEY, { expiresIn: "5d" }); // Generate Token
-  const url = currentURL + `/reset-password/${token}`;
+  const url =  `https://naughty-goodall-3caf39.netlify.com/reset-password/${token}`;
 
   const mailOptions = {
     from: '"Where Should I Live No Reply" <noreply.whereshouldilive@gmail.com>',
