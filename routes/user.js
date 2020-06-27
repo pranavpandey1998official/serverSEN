@@ -86,12 +86,10 @@ const userVerification = async(req, res) => {
 */
 
 const signUp = async(req, res) => {
-  console.log(req.body);
   const { email, password, firstName, lastName } = req.body;
 
   try {
     let user = await User.findUser(email);
-    console.log("user: "+user);
 
     if(user.length != 0) {
       return res.status(402).json({

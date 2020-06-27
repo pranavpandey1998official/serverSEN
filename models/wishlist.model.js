@@ -3,8 +3,9 @@ const connection = require('../connections/mysql_db');
 const getWishlist = (userId) => {
     let query = {
         sql: `select * from wishlist as w
-              natural join property 
-              where w.userId = ?`,
+              NATURAL JOIN property 
+              NATURAL JOIN property_photos as i
+              WHERE i.photoId = 1 AND w.userId = ?`,
         values: [userId]      
     };
 
